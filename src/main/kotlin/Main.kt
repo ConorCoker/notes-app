@@ -1,4 +1,7 @@
+import mu.KotlinLogging
 import utils.ScannerInput
+
+private val logger = KotlinLogging.logger {  }
 fun main(args: Array<String>) {
 
     runMenu()
@@ -19,23 +22,23 @@ private fun runMenu() {
 }
 
 private fun exitApp() {
-    TODO("Not yet implemented")
+    logger.info { "exitApp() function has been called" }
 }
 
 private fun deleteNote() {
-    TODO("Not yet implemented")
+    logger.info { "deleteNote() function has been called" }
 }
 
 private fun updateNote() {
-    TODO("Not yet implemented")
+    logger.info { "updateNote() function has been called" }
 }
 
 private fun listNotes() {
-    TODO("Not yet implemented")
+    logger.info { "listNotes() function has been called" }
 }
 
 private fun addNote() {
-    TODO("Not yet implemented")
+    logger.info { "addNote() function has been called" }
 }
 
 private fun displayMenuAndReturnInput(): Int {
