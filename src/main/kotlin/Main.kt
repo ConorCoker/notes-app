@@ -1,5 +1,4 @@
-import java.util.Scanner
-
+import utils.ScannerInput
 fun main(args: Array<String>) {
 
     runMenu()
@@ -40,24 +39,19 @@ private fun addNote() {
 }
 
 private fun displayMenuAndReturnInput(): Int {
-
-    val scanner = Scanner(System.`in`)
-
-    println(
+    return ScannerInput.readNextInt(
         """
-        --------------------
-        NOTE KEEPER APP
-        --------------------
-        NOTE MENU
-            1) Add a note
-            2) List all notes
-            3) Update a note
-            4) Delete a note
-        --------------------
-            0) Exit
-        --------------------    
-    """.trimIndent()
+         > ----------------------------------
+         > |        NOTE KEEPER APP         |
+         > ----------------------------------
+         > | NOTE MENU                      |
+         > |   1) Add a note                |
+         > |   2) List all notes            |
+         > |   3) Update a note             |
+         > |   4) Delete a note             |
+         > ----------------------------------
+         > |   0) Exit                      |
+         > ----------------------------------
+         > ==>> """.trimMargin(">")
     )
-    print("==>> ")
-    return scanner.nextInt()
 }
