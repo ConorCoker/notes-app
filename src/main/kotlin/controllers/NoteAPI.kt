@@ -1,6 +1,7 @@
 package controllers
 
 import models.Note
+import utils.Utils
 
 class NoteAPI {
 
@@ -8,6 +9,17 @@ class NoteAPI {
 
     fun add(note: Note): Boolean {
         return notes.add(note)
+    }
+
+    fun numberOfNotes():Int{
+        return notes.size
+    }
+
+    fun findNote(index: Int): Note? {
+        return if (Utils.isValidIndex(index, notes)) {
+            notes[index]
+        } else null
+
     }
 
     fun listAllNotes(): String {
