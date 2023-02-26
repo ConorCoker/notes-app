@@ -11,7 +11,7 @@ class NoteAPI {
         return notes.add(note)
     }
 
-    fun getNumberOfNotes():Int{
+    fun numberOfNotes():Int{
         return notes.size
     }
 
