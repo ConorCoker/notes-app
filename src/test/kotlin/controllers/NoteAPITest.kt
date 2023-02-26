@@ -87,4 +87,33 @@ class NoteAPITest {
         }
     }
 
+    @Nested
+    inner class ListActiveOrInactiveNotes{
+
+        @Test
+        fun `list all archived notes returns No archived notes stored message when no archived notes are stored `(){
+            val archivedNotesString = populatedNotes!!.listArchivedNotes()
+            assertTrue(archivedNotesString.contains("No archived notes stored"))
+        }
+
+        @Test
+        fun `list all archived notes returns archived notes when archived notes are present in collection`(){
+            populatedNotes!!.add(Note("Archived note",1,"Archived",true))
+            assertTrue(populatedNotes!!.listArchivedNotes().contains("Archived note"))
+        }
+
+        @Test
+        fun `list all active notes returns no active notes stored when no active notes are present`(){
+            assertTrue(emptyNotes!!.listActiveNotes().contains("No active notes stored"))
+        }
+
+        @Test
+        fun `list all active notes returns the active notes toString when active notes are present in collection`(){
+            val activeString = populatedNotes!!.listActiveNotes()
+            assertTrue(activeString.lowercase().contains("learning kotlin"))
+        }
+
+
+    }
+
 }
