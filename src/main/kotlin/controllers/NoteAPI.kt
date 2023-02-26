@@ -11,7 +11,7 @@ class NoteAPI {
         return notes.add(note)
     }
 
-    fun numberOfNotes():Int{
+    fun numberOfNotes(): Int {
         return notes.size
     }
 
@@ -32,5 +32,8 @@ class NoteAPI {
             str
         } else "No notes stored"
     }
+
+
+
 
 }
