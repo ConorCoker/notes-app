@@ -73,7 +73,45 @@ class NoteAPI {
         return numOfActiveNotes
     }
 
+    fun listNotesBySelectedPriority(priority: Int) =
+
+        if (notes.isNotEmpty()) {
+
+            if (numberOfNotesByPriority()[priority]!! > 0) {
+                var str = ""
+                for (note in notes) {
+                    if (note.notePriority == priority) {
+                        str += "${notes.indexOf(note)}: $note\n"
+                    }
+                }
+                str
+            } else {
+                "No notes for that priority stored"
+            }
+        }
+    else "No notes stored"
 
 
+    private fun numberOfNotesByPriority(): HashMap<Int, Int> {
 
+        val mapToReturn = HashMap<Int, Int>()
+        mapToReturn[1] = 0
+        mapToReturn[2] = 0
+        mapToReturn[3] = 0
+        mapToReturn[4] = 0
+        mapToReturn[5] = 0
+        for (note in notes) {
+            when (note.notePriority) {
+                1 -> mapToReturn[1] = mapToReturn[1]!! + 1
+                2 -> mapToReturn[2] = mapToReturn[2]!! + 1
+                3 -> mapToReturn[3] = mapToReturn[3]!! + 1
+                4 -> mapToReturn[4] = mapToReturn[4]!! + 1
+                5 -> mapToReturn[5] = mapToReturn[5]!! + 1
+            }
+        }
+        return mapToReturn
+    }
 }
+
+
+

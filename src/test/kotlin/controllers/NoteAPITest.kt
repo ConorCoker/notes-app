@@ -116,4 +116,24 @@ class NoteAPITest {
 
     }
 
+    @Nested
+    inner class ListNotesByPriority{
+
+        @Test
+        fun `list notes by priority returns correct message when NO notes of that priority stored but notes are present in collection`(){
+            assertTrue(populatedNotes!!.listNotesBySelectedPriority(2).contains("No notes for that priority stored"))
+        }
+
+        @Test
+        fun `list notes by priority returns correct message when NO notes are in collection`(){
+            assertTrue(emptyNotes!!.listNotesBySelectedPriority(2).contains("No notes stored"))
+        }
+
+        @Test
+        fun `list notes by priority returns correct note of that priority`(){
+            assertTrue(populatedNotes!!.listNotesBySelectedPriority(4).contains("Test App")&&populatedNotes!!.listNotesBySelectedPriority(4).contains("Code App"))
+        }
+
+    }
+
 }
