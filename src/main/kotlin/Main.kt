@@ -29,7 +29,20 @@ private fun exitApp() {
 }
 
 private fun deleteNote() {
-    logger.info { "deleteNote() function has been called" }
+
+    if (noteAPI.numberOfNotes() > 0) {
+        listNotes()
+        val deletedNote = noteAPI.deleteNote(ScannerInput.readNextInt("Please enter index number of note you wish to delete: "))
+        if (deletedNote!=null){
+            println("Delete Successful! Deleted note : ${deletedNote.noteTitle}")
+        }else{
+            println("Delete NOT Successful")
+        }
+
+    } else {
+        println("There is no notes in system to delete!")
+    }
+
 }
 
 private fun updateNote() {
@@ -52,9 +65,9 @@ private fun addNote() {
                 false
             )
         )
-    ){
+    ) {
         println("Added Successfully")
-    }else println("Add failed")
+    } else println("Add failed")
 }
 
 private fun displayMenuAndReturnInput(): Int {

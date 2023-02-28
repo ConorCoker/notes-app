@@ -19,7 +19,7 @@ class NoteAPITest {
     private var emptyNotes: NoteAPI? = NoteAPI()
 
     @BeforeEach
-    fun setup(){
+    fun setup() {
         learnKotlin = Note("Learning Kotlin", 5, "College", false)
         summerHoliday = Note("Summer Holiday to France", 1, "Holiday", false)
         codeApp = Note("Code App", 4, "Work", false)
@@ -35,7 +35,7 @@ class NoteAPITest {
     }
 
     @AfterEach
-    fun tearDown(){
+    fun tearDown() {
         learnKotlin = null
         summerHoliday = null
         codeApp = null
@@ -88,27 +88,27 @@ class NoteAPITest {
     }
 
     @Nested
-    inner class ListActiveOrInactiveNotes{
+    inner class ListActiveOrInactiveNotes {
 
         @Test
-        fun `list all archived notes returns No archived notes stored message when no archived notes are stored `(){
+        fun `list all archived notes returns No archived notes stored message when no archived notes are stored `() {
             val archivedNotesString = populatedNotes!!.listArchivedNotes()
             assertTrue(archivedNotesString.contains("No archived notes stored"))
         }
 
         @Test
-        fun `list all archived notes returns archived notes when archived notes are present in collection`(){
-            populatedNotes!!.add(Note("Archived note",1,"Archived",true))
+        fun `list all archived notes returns archived notes when archived notes are present in collection`() {
+            populatedNotes!!.add(Note("Archived note", 1, "Archived", true))
             assertTrue(populatedNotes!!.listArchivedNotes().contains("Archived note"))
         }
 
         @Test
-        fun `list all active notes returns no active notes stored when no active notes are present`(){
+        fun `list all active notes returns no active notes stored when no active notes are present`() {
             assertTrue(emptyNotes!!.listActiveNotes().contains("No active notes stored"))
         }
 
         @Test
-        fun `list all active notes returns the active notes toString when active notes are present in collection`(){
+        fun `list all active notes returns the active notes toString when active notes are present in collection`() {
             val activeString = populatedNotes!!.listActiveNotes()
             assertTrue(activeString.lowercase().contains("learning kotlin"))
         }
@@ -117,23 +117,47 @@ class NoteAPITest {
     }
 
     @Nested
-    inner class ListNotesByPriority{
+    inner class ListNotesByPriority {
 
         @Test
-        fun `list notes by priority returns correct message when NO notes of that priority stored but notes are present in collection`(){
+        fun `list notes by priority returns correct message when NO notes of that priority stored but notes are present in collection`() {
             assertTrue(populatedNotes!!.listNotesBySelectedPriority(2).contains("No notes for that priority stored"))
         }
 
         @Test
-        fun `list notes by priority returns correct message when NO notes are in collection`(){
+        fun `list notes by priority returns correct message when NO notes are in collection`() {
             assertTrue(emptyNotes!!.listNotesBySelectedPriority(2).contains("No notes stored"))
         }
 
         @Test
-        fun `list notes by priority returns correct note of that priority`(){
-            assertTrue(populatedNotes!!.listNotesBySelectedPriority(4).contains("Test App")&&populatedNotes!!.listNotesBySelectedPriority(4).contains("Code App"))
+        fun `list notes by priority returns correct note of that priority`() {
+            assertTrue(
+                populatedNotes!!.listNotesBySelectedPriority(4)
+                    .contains("Test App") && populatedNotes!!.listNotesBySelectedPriority(4).contains("Code App")
+            )
         }
 
     }
 
+    @Nested
+    inner class DeleteNotes {
+
+        @Test
+        fun `deleting a note when no notes present returns null`() {
+            assertEquals(null, emptyNotes!!.deleteNote(2))
+        }
+
+        @Test
+        fun `deleting a note when notes are present but a invalid index is supplied returns null`() {
+            assertEquals(null, populatedNotes!!.deleteNote(5))
+        }
+
+        @Test
+        fun `deleting a valid note removes note from arraylist and returns the note`() {
+            assertTrue(populatedNotes!!.numberOfNotes() == 5)
+            val noteToRemove = populatedNotes!!.findNote(4)
+            assertTrue(populatedNotes!!.deleteNote(4) == noteToRemove)
+            assertTrue(populatedNotes!!.numberOfNotes() == 4)
+        }
+    }
 }
