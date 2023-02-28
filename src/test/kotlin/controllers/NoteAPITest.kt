@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import kotlin.test.assertContains
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 
 class NoteAPITest {
 
@@ -159,5 +161,35 @@ class NoteAPITest {
             assertTrue(populatedNotes!!.deleteNote(4) == noteToRemove)
             assertTrue(populatedNotes!!.numberOfNotes() == 4)
         }
+    }
+
+    @Nested
+    inner class UpdatingNotes {
+
+        @Test
+        fun `updating a note that does not exist returns false`(){
+            assertFalse(emptyNotes!!.updateNote(0,Note("Updated Note",1,"work",false)))
+            assertFalse(populatedNotes!!.updateNote(6,Note("Updated Note",1,"work",false)))
+            assertFalse(populatedNotes!!.updateNote(-1,Note("Updated Note",1,"work",false)))
+        }
+
+        @Test
+        fun `updating a note that exists updates that note and returns true`(){
+
+            assertEquals(swim, populatedNotes!!.findNote(4))
+            assertEquals("Swim - Pool", populatedNotes!!.findNote(4)!!.noteTitle)
+            assertEquals(3, populatedNotes!!.findNote(4)!!.notePriority)
+            assertEquals("Hobby", populatedNotes!!.findNote(4)!!.noteCategory)
+            assertTrue(!populatedNotes!!.findNote(4)!!.isNoteArchived)
+
+
+            assertTrue(populatedNotes!!.updateNote(4, Note("Updating Note", 2, "College", true)))
+            assertEquals("Updating Note", populatedNotes!!.findNote(4)!!.noteTitle)
+            assertEquals(2, populatedNotes!!.findNote(4)!!.notePriority)
+            assertEquals("College", populatedNotes!!.findNote(4)!!.noteCategory)
+            assertTrue(populatedNotes!!.findNote(4)!!.isNoteArchived)
+
+        }
+
     }
 }
