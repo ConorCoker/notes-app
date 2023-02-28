@@ -29,6 +29,17 @@ class NoteAPI {
         } else null
     }
 
+    fun updateNote(indexToUpdate: Int, note: Note?): Boolean {
+
+        return if (Utils.isValidIndex(indexToUpdate, notes) && note != null) {
+            findNote(indexToUpdate)!!.noteTitle = note.noteTitle
+            findNote(indexToUpdate)!!.notePriority = note.notePriority
+            findNote(indexToUpdate)!!.noteCategory = note.noteCategory
+            findNote(indexToUpdate)!!.isNoteArchived = note.isNoteArchived
+            true
+        } else false
+    }
+
 
     fun listAllNotes(): String {
 
@@ -118,6 +129,8 @@ class NoteAPI {
         }
         return mapToReturn
     }
+
+
 }
 
 

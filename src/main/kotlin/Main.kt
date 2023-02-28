@@ -1,7 +1,9 @@
 import controllers.NoteAPI
 import models.Note
 import mu.KotlinLogging
-import utils.ScannerInput
+import utils.ScannerInput.readNextInt
+import utils.ScannerInput.readNextLine
+
 
 private val logger = KotlinLogging.logger { }
 private val noteAPI = NoteAPI()
@@ -32,10 +34,11 @@ private fun deleteNote() {
 
     if (noteAPI.numberOfNotes() > 0) {
         listNotes()
-        val deletedNote = noteAPI.deleteNote(ScannerInput.readNextInt("Please enter index number of note you wish to delete: "))
-        if (deletedNote!=null){
+        val deletedNote =
+            noteAPI.deleteNote(readNextInt("Please enter index number of note you wish to delete: "))
+        if (deletedNote != null) {
             println("Delete Successful! Deleted note : ${deletedNote.noteTitle}")
-        }else{
+        } else {
             println("Delete NOT Successful")
         }
 
@@ -45,9 +48,17 @@ private fun deleteNote() {
 
 }
 
-private fun updateNote() {
-    logger.info { "updateNote() function has been called" }
+fun updateNote() {
+
+    if (noteAPI.numberOfNotes() > 0) {
+        listNotes()
+        if (noteAPI.updateNote(readNextInt("Please enter index of Note you wish to update: "),createNote())){
+            println("Update Successful")
+        }else println("Update Failed")
+
+    } else println("Note notes to delete!")
 }
+
 
 private fun listNotes() {
 
@@ -57,21 +68,24 @@ private fun listNotes() {
 
 private fun addNote() {
 
-    if (noteAPI.add(
-            Note(
-                ScannerInput.readNextLine("Please enter note title: "),
-                ScannerInput.readNextInt("Please enter note priority (1-5): "),
-                ScannerInput.readNextLine("Please enter note category: "),
-                false
-            )
-        )
+    if (noteAPI.add(createNote())
     ) {
         println("Added Successfully")
     } else println("Add failed")
 }
 
+fun createNote(): Note {
+    return Note(
+        readNextLine("Please enter note title: "),
+        readNextInt("Please enter note priority (1-5): "),
+        readNextLine("Please enter note category: "),
+        false
+    )
+}
+
+
 private fun displayMenuAndReturnInput(): Int {
-    return ScannerInput.readNextInt(
+    return readNextInt(
         """
          > ----------------------------------
          > |        NOTE KEEPER APP         |
