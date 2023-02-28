@@ -22,6 +22,14 @@ class NoteAPI {
 
     }
 
+    fun deleteNote(index: Int): Note? {
+
+        return if (Utils.isValidIndex(index, notes)) {
+            notes.removeAt(index)
+        } else null
+    }
+
+
     fun listAllNotes(): String {
 
         return if (notes.isNotEmpty()) {
@@ -88,8 +96,7 @@ class NoteAPI {
             } else {
                 "No notes for that priority stored"
             }
-        }
-    else "No notes stored"
+        } else "No notes stored"
 
 
     private fun numberOfNotesByPriority(): HashMap<Int, Int> {
