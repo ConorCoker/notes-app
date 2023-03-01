@@ -1,11 +1,13 @@
 package controllers
 
 import models.Note
+import persistance.Serializer
 import utils.Utils
 
-class NoteAPI {
+class NoteAPI(serializerType:Serializer) {
 
     private var notes = ArrayList<Note>()
+    private var serializer = serializerType
 
     fun add(note: Note): Boolean {
         return notes.add(note)
@@ -28,6 +30,17 @@ class NoteAPI {
             notes.removeAt(index)
         } else null
     }
+
+    @Throws(Exception::class)
+    fun load() {
+        notes = serializer.read() as ArrayList<Note>
+    }
+
+    @Throws(Exception::class)
+    fun store() {
+        serializer.write(notes)
+    }
+
 
     fun updateNote(indexToUpdate: Int, note: Note?): Boolean {
 
