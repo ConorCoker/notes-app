@@ -4,7 +4,7 @@ import models.Note
 import persistance.Serializer
 import utils.Utils
 
-class NoteAPI(serializerType:Serializer) {
+class NoteAPI(serializerType: Serializer) {
 
     private var notes = ArrayList<Note>()
     private var serializer = serializerType
@@ -86,9 +86,8 @@ class NoteAPI(serializerType:Serializer) {
                     str += "${notes.indexOf(note)}: $note\n"
                 }
             }
-            str
-
-        } else return "No archived notes stored"
+            str }
+        else return "No archived notes stored"
     }
 
     private fun numberOfArchivedNotes(): Int {
@@ -106,7 +105,6 @@ class NoteAPI(serializerType:Serializer) {
     }
 
     fun archiveNote(index: Int) =
-
         if (Utils.isValidIndex(index, notes)) {
             if (!notes[index].isNoteArchived) {
                 notes[index].isNoteArchived = true
@@ -151,6 +149,8 @@ class NoteAPI(serializerType:Serializer) {
         }
         return mapToReturn
     }
+
+    fun mapOfNotesByPriority() = numberOfNotesByPriority()
 
 
 }
