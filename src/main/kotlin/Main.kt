@@ -9,6 +9,7 @@ import java.io.File
 
 
 private val logger = KotlinLogging.logger { }
+
 //private val noteAPI = NoteAPI(XMLSerializer(File("notes.xml")))
 private val noteAPI = NoteAPI(JSONSerializer(File("notes.json")))
 
@@ -36,7 +37,7 @@ private fun runMenu() {
 private fun load() {
     try {
         noteAPI.load()
-    }catch (e:Exception){
+    } catch (e: Exception) {
         System.err.println("Error reading from file: $e")
     }
 }
@@ -44,7 +45,7 @@ private fun load() {
 private fun save() {
     try {
         noteAPI.store()
-    }catch (e:Exception){
+    } catch (e: Exception) {
         System.err.println("Error writing to file: $e")
     }
 }
@@ -68,6 +69,20 @@ private fun deleteNote() {
     } else {
         println("There is no notes in system to delete!")
     }
+
+}
+
+private fun archiveNote() {
+
+    if (noteAPI.numberOfNotes() > 0) {
+        println(noteAPI.listActiveNotes())
+        when (noteAPI.archiveNote(readNextInt("Please enter index of note you wish to archive: "))) {
+            -999 -> println("That is not a valid index!")
+            -1 -> println("That index exists but is already archived!")
+            1 -> println("Note successfully archived!")
+
+        }
+    } else println("There is no notes for you to archive!")
 
 }
 
