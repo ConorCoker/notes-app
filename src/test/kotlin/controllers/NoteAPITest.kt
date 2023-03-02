@@ -281,4 +281,26 @@ class NoteAPITest {
 
     }
 
+    @Nested
+    inner class ArchivingNotes{
+
+        @Test
+        fun `trying to archive a note when theres no notes in system returns -999`(){
+            assertEquals(-999,emptyNotes!!.archiveNote(0))
+        }
+
+        @Test
+        fun `trying to archive a note in a populated list but with a invalid index returns -999`(){
+            assertEquals(-999,populatedNotes!!.archiveNote(5))
+        }
+
+        @Test
+        fun `archiving an active note archives that note and archiving a note that is archived returns -1`(){
+            assertFalse(populatedNotes!!.findNote(0)!!.isNoteArchived)
+            populatedNotes!!.archiveNote(0)
+            assertTrue(populatedNotes!!.findNote(0)!!.isNoteArchived)
+            assertEquals(-1,populatedNotes!!.archiveNote(0))
+        }
+    }
+
 }

@@ -105,6 +105,15 @@ class NoteAPI(serializerType:Serializer) {
         return numOfActiveNotes
     }
 
+    fun archiveNote(index: Int) =
+
+        if (Utils.isValidIndex(index, notes)) {
+            if (!notes[index].isNoteArchived) {
+                notes[index].isNoteArchived = true
+                1
+            } else -1
+        } else -999
+
     fun listNotesBySelectedPriority(priority: Int) =
 
         if (notes.isNotEmpty()) {
