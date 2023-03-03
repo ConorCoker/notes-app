@@ -289,7 +289,7 @@ class NoteAPITest {
         }
 
         @Test
-        fun `saving then loading notes does not lose data`(){
+        fun `saving then loading notes in YAML does not lose data`(){
             //new note api and adding 3 notes to it
             val noteAPIToSave = NoteAPI(YamlSerializer(File("notes.yaml")))
             noteAPIToSave.add(learnKotlin!!)
