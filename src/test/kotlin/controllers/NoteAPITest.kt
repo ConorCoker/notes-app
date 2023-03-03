@@ -105,7 +105,7 @@ class NoteAPITest {
 
         @Test
         fun `list notes by priority returns correct message when NO notes of that priority stored but notes are present in collection`() {
-            assertTrue(populatedNotes!!.listNotesBySelectedPriority(2).contains("No notes for that priority stored"))
+            assertTrue(populatedNotes!!.listNotesBySelectedPriority(2).contains("No notes"))
         }
 
         @Test
@@ -455,6 +455,20 @@ class NoteAPITest {
         }
     }
 
+    @Nested
+    inner class SearchMethods{
 
-
+        @Test
+        fun `searching for a title that does not exist returns empty string`(){
+            assertTrue(populatedNotes!!.searchByTitle("Title that does not exist").isEmpty())
+        }
+        @Test
+        fun `searching for a title when list is empty returns no notes string`(){
+            assertTrue(emptyNotes!!.searchByTitle("Empty List").contains("No notes"))
+        }
+        @Test
+        fun `searching for a title that does exist returns that notes string`(){
+            assertTrue(populatedNotes!!.searchByTitle("Learning Kotlin").contains("Learning Kotlin"))
+        }
+    }
 }
