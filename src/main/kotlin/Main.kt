@@ -56,7 +56,7 @@ fun listNotesBySelectedPriority() {
 }
 
 private fun listNumberOfNotesByPriority() {
-    println(noteAPI.mapOfNotesByPriority())
+    println(noteAPI.numberOfNotesByPriority())
 }
 
 private fun listArchivedNotes() {

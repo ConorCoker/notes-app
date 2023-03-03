@@ -284,12 +284,12 @@ class NoteAPITest {
             val emptyNoteAPI = NoteAPI(YamlSerializer(File("notes.yaml")))
             emptyNoteAPI.store()
             val loadedEmptyNoteAPI = NoteAPI(YamlSerializer(File("notes.yaml")))
-            assertEquals(0,loadedEmptyNoteAPI.numberOfNotes())
-            assertEquals(emptyNoteAPI.numberOfNotes(),loadedEmptyNoteAPI.numberOfNotes())
+            assertEquals(0, loadedEmptyNoteAPI.numberOfNotes())
+            assertEquals(emptyNoteAPI.numberOfNotes(), loadedEmptyNoteAPI.numberOfNotes())
         }
 
         @Test
-        fun `saving then loading notes in YAML does not lose data`(){
+        fun `saving then loading notes in YAML does not lose data`() {
             //new note api and adding 3 notes to it
             val noteAPIToSave = NoteAPI(YamlSerializer(File("notes.yaml")))
             noteAPIToSave.add(learnKotlin!!)
@@ -302,10 +302,10 @@ class NoteAPITest {
             //loading the old save from original instance to this noteAPI
             noteAPIToLoad.load()
             //checking are all notes present and equal
-            assertEquals(noteAPIToSave.numberOfNotes(),noteAPIToLoad.numberOfNotes())
-            assertEquals(noteAPIToSave.findNote(0),noteAPIToLoad.findNote(0))
-            assertEquals(noteAPIToSave.findNote(1),noteAPIToSave.findNote(1))
-            assertEquals(noteAPIToSave.findNote(2),noteAPIToLoad.findNote(2))
+            assertEquals(noteAPIToSave.numberOfNotes(), noteAPIToLoad.numberOfNotes())
+            assertEquals(noteAPIToSave.findNote(0), noteAPIToLoad.findNote(0))
+            assertEquals(noteAPIToSave.findNote(1), noteAPIToSave.findNote(1))
+            assertEquals(noteAPIToSave.findNote(2), noteAPIToLoad.findNote(2))
         }
 
     }
@@ -331,5 +331,48 @@ class NoteAPITest {
             assertEquals(-1, populatedNotes!!.archiveNote(0))
         }
     }
+
+    @Nested
+    inner class CountingMethods {
+
+        @Test
+        fun numberOfNotesCalculatedCorrectly() {
+            assertEquals(5, populatedNotes!!.numberOfNotes())
+            assertEquals(0, emptyNotes!!.numberOfNotes())
+        }
+
+        @Test
+        fun numberOfArchivedNotesCalculatedCorrectly() {
+            //currently all notes are active
+            assertEquals(0, populatedNotes!!.numberOfArchivedNotes())
+            //making this note archived
+            learnKotlin!!.isNoteArchived = true
+            //checking do we now have 1 archived note
+            assertEquals(1, populatedNotes!!.numberOfArchivedNotes())
+            assertEquals(0, emptyNotes!!.numberOfArchivedNotes())
+        }
+
+        @Test
+        fun numberOfActiveNotesCalculatedCorrectly() {
+            assertEquals(5, populatedNotes!!.numberOfActiveNotes())
+            learnKotlin!!.isNoteArchived = true
+            assertEquals(4,populatedNotes!!.numberOfActiveNotes())
+            assertEquals(0, emptyNotes!!.numberOfActiveNotes())
+        }
+
+        @Test
+        fun numberOfNotesByPriorityCalculatedCorrectly() {
+            assertEquals(1, populatedNotes!!.numberOfNotesByPriority()[1])
+            assertEquals(0, populatedNotes!!.numberOfNotesByPriority()[2])
+            assertEquals(1, populatedNotes!!.numberOfNotesByPriority()[3])
+            assertEquals(2, populatedNotes!!.numberOfNotesByPriority()[4])
+            assertEquals(1, populatedNotes!!.numberOfNotesByPriority()[5])
+
+            assertEquals(0, emptyNotes!!.numberOfNotesByPriority()[1])
+
+
+        }
+    }
+
 
 }
