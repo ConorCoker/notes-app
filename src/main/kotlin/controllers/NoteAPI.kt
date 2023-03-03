@@ -22,6 +22,12 @@ class NoteAPI(serializerType: Serializer) {
 
     }
 
+    fun searchByTitle(title:String):String =
+         if (notes.isNotEmpty()){
+             formatListString(notes.filter { note -> note.noteTitle.lowercase() == title.lowercase() })
+         } else "No notes in system to search for!"
+
+
     fun deleteNote(index: Int): Note? {
 
         return if (Utils.isValidIndex(index, notes)) {
@@ -62,9 +68,7 @@ class NoteAPI(serializerType: Serializer) {
 //        } else "No notes stored"
 
         if (notes.isEmpty()) "No notes stored"
-        else notes.joinToString(separator = "\n") { note ->
-            notes.indexOf(note).toString() + ": " + note.toString()
-        }
+        else formatListString(notes)
 
     fun listActiveNotes() =
 //        return if (numberOfActiveNotes() > 0) {
@@ -78,17 +82,13 @@ class NoteAPI(serializerType: Serializer) {
 //
 //        } else "No active notes stored"
         if (numberOfActiveNotes() > 0) {
-            notes.filter { note -> !note.isNoteArchived }.joinToString(separator = "\n") {
-                notes.indexOf(it).toString() + ": " + it.toString()
-            }
+            formatListString(notes.filter { note -> !note.isNoteArchived })
         } else "No active notes stored"
 
 
     fun listArchivedNotes() =
         if (numberOfArchivedNotes() > 0) {
-            notes.filter { note -> note.isNoteArchived }.joinToString(separator = "\n") {
-                notes.indexOf(it).toString() + ": " + it
-            }
+            formatListString(notes.filter { note -> note.isNoteArchived })
         } else "No archived notes stored"
 //        return if (numberOfArchivedNotes() > 0) {
 //            var str = ""
@@ -104,7 +104,7 @@ class NoteAPI(serializerType: Serializer) {
     fun numberOfArchivedNotes() = notes.size - numberOfActiveNotes()
 
 
-    fun numberOfActiveNotes(): Int {
+    fun numberOfActiveNotes() =
 //        var numOfActiveNotes = 0
 //        for (note in notes) {
 //            if (!note.isNoteArchived) {
@@ -112,8 +112,8 @@ class NoteAPI(serializerType: Serializer) {
 //            }
 //        }
 //        return numOfActiveNotes
-        return notes.stream().filter { note: Note -> !note.isNoteArchived }.count().toInt()
-    }
+        notes.count { note: Note -> !note.isNoteArchived }
+
 
     fun archiveNote(index: Int) =
         if (Utils.isValidIndex(index, notes)) {
@@ -127,9 +127,7 @@ class NoteAPI(serializerType: Serializer) {
 
         if (notes.isNotEmpty()) {
             if (numberOfNotesByPriority()[priority]!! > 0) {
-                notes.filter { note -> note.notePriority == priority }.joinToString(separator = "\n") {
-                    notes.indexOf(it).toString() + ": " + it
-                }
+                formatListString(notes.filter { note -> note.notePriority == priority })
 
             } else "No notes with a priority of $priority stored"
 
@@ -170,6 +168,12 @@ class NoteAPI(serializerType: Serializer) {
         }
         return mapToReturn
     }
+
+    private fun formatListString(notesToFormat : List<Note>) : String =
+        notesToFormat
+            .joinToString (separator = "\n") { note ->
+                notes.indexOf(note).toString() + ": " + note.toString() }
+
 
 
 }

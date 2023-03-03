@@ -28,12 +28,19 @@ private fun runMenu() {
             3 -> updateNote()
             4 -> deleteNote()
             5 -> archiveNote()
+            6 -> searchForNoteByTitle()
             20 -> save()
             21 -> load()
             0 -> exitApp()
             else -> println("Invalid option entered")
         }
     } while (true)
+}
+
+private fun searchForNoteByTitle() {
+    val stringToPrint =
+        noteAPI.searchByTitle(readNextLine("Please enter the title of the note you wish to search for: "))
+    if (stringToPrint.isEmpty()) println("No note with that title has been found!") else println(stringToPrint)
 }
 
 private fun runSubMenu() {
@@ -138,7 +145,11 @@ private fun updateNote() {
 
     if (noteAPI.numberOfNotes() > 0) {
         listNotes()
-        if (noteAPI.updateNote(readNextInt("Please enter index of models.models.models.Note you wish to update: "), createNote())) {
+        if (noteAPI.updateNote(
+                readNextInt("Please enter index of models.models.models.Note you wish to update: "),
+                createNote()
+            )
+        ) {
             println("Update Successful")
         } else println("Update Failed")
 
@@ -181,6 +192,7 @@ private fun displayMenuAndReturnInput(): Int {
          > |   3) Update a note                       |
          > |   4) Delete a note                       |
          > |   5) Archive a note                      |
+         > |   6) Search for a note by title          |
          > |  20) Save notes                          |
          > |  21) Load notes                          |
          > --------------------------------------------
