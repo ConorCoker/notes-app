@@ -1,8 +1,7 @@
 import controllers.NoteAPI
 import models.Note
 import mu.KotlinLogging
-import persistance.JSONSerializer
-import persistance.XMLSerializer
+import persistance.YamlSerializer
 import utils.ScannerInput
 import utils.ScannerInput.readNextInt
 import utils.ScannerInput.readNextLine
@@ -12,7 +11,8 @@ import java.io.File
 private val logger = KotlinLogging.logger { }
 
 //private val noteAPI = NoteAPI(XMLSerializer(File("notes.xml")))
-private val noteAPI = NoteAPI(JSONSerializer(File("notes.json")))
+//private val noteAPI = NoteAPI(JSONSerializer(File("notes.json")))
+private val noteAPI = NoteAPI(YamlSerializer(File("notes.yaml")))
 
 fun main(args: Array<String>) {
 
@@ -128,7 +128,7 @@ private fun archiveNote() {
         when (noteAPI.archiveNote(readNextInt("Please enter index of note you wish to archive: "))) {
             -999 -> println("That is not a valid index!")
             -1 -> println("That index exists but is already archived!")
-            1 -> println("Note successfully archived!")
+            1 -> println("models.models.models.Note successfully archived!")
         }
     } else println("There is no notes for you to archive!")
 
@@ -138,11 +138,11 @@ private fun updateNote() {
 
     if (noteAPI.numberOfNotes() > 0) {
         listNotes()
-        if (noteAPI.updateNote(readNextInt("Please enter index of Note you wish to update: "), createNote())) {
+        if (noteAPI.updateNote(readNextInt("Please enter index of models.models.models.Note you wish to update: "), createNote())) {
             println("Update Successful")
         } else println("Update Failed")
 
-    } else println("Note notes to delete!")
+    } else println("models.models.models.Note notes to delete!")
 }
 
 private fun listNotes() = println(noteAPI.listAllNotes())

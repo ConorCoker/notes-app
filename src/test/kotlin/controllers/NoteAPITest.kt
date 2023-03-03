@@ -1,5 +1,6 @@
 package controllers
 
+import persistance.YamlSerializer
 import models.Note
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -9,7 +10,6 @@ import org.junit.jupiter.api.Test
 import persistance.JSONSerializer
 import persistance.XMLSerializer
 import java.io.File
-import kotlin.test.assertContains
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 
@@ -31,7 +31,7 @@ class NoteAPITest {
         testApp = Note("Test App", 4, "Work", false)
         swim = Note("Swim - Pool", 3, "Hobby", false)
 
-        //adding 5 Note to the notes api
+        //adding 5 models.models.models.Note to the notes api
         populatedNotes!!.add(learnKotlin!!)
         populatedNotes!!.add(summerHoliday!!)
         populatedNotes!!.add(codeApp!!)
@@ -170,14 +170,14 @@ class NoteAPITest {
     inner class UpdatingNotes {
 
         @Test
-        fun `updating a note that does not exist returns false`(){
-            assertFalse(emptyNotes!!.updateNote(0,Note("Updated Note",1,"work",false)))
-            assertFalse(populatedNotes!!.updateNote(6,Note("Updated Note",1,"work",false)))
-            assertFalse(populatedNotes!!.updateNote(-1,Note("Updated Note",1,"work",false)))
+        fun `updating a note that does not exist returns false`() {
+            assertFalse(emptyNotes!!.updateNote(0, Note("Updated models.models.models.Note", 1, "work", false)))
+            assertFalse(populatedNotes!!.updateNote(6, Note("Updated models.models.models.Note", 1, "work", false)))
+            assertFalse(populatedNotes!!.updateNote(-1, Note("Updated models.models.models.Note", 1, "work", false)))
         }
 
         @Test
-        fun `updating a note that exists updates that note and returns true`(){
+        fun `updating a note that exists updates that note and returns true`() {
 
             assertEquals(swim, populatedNotes!!.findNote(4))
             assertEquals("Swim - Pool", populatedNotes!!.findNote(4)!!.noteTitle)
@@ -186,8 +186,8 @@ class NoteAPITest {
             assertTrue(!populatedNotes!!.findNote(4)!!.isNoteArchived)
 
 
-            assertTrue(populatedNotes!!.updateNote(4, Note("Updating Note", 2, "College", true)))
-            assertEquals("Updating Note", populatedNotes!!.findNote(4)!!.noteTitle)
+            assertTrue(populatedNotes!!.updateNote(4, Note("Updating models.models.models.Note", 2, "College", true)))
+            assertEquals("Updating models.models.models.Note", populatedNotes!!.findNote(4)!!.noteTitle)
             assertEquals(2, populatedNotes!!.findNote(4)!!.notePriority)
             assertEquals("College", populatedNotes!!.findNote(4)!!.noteCategory)
             assertTrue(populatedNotes!!.findNote(4)!!.isNoteArchived)
@@ -236,7 +236,7 @@ class NoteAPITest {
             assertEquals(storingNotes.findNote(1), loadedNotes.findNote(1))
             assertEquals(storingNotes.findNote(2), loadedNotes.findNote(2))
 
-            //The above assertEquals only work because Note is a data class so its equals() method does not care about
+            //The above assertEquals only work because models.models.models.Note is a data class so its equals() method does not care about
             //reference in memory only comparing fields
 
         }
@@ -279,27 +279,56 @@ class NoteAPITest {
             assertEquals(storingNotes.findNote(2), loadedNotes.findNote(2))
         }
 
+        @Test
+        fun `saving and loading an empty collection in YAML does not crash app and loads back empty list`() {
+            val emptyNoteAPI = NoteAPI(YamlSerializer(File("notes.yaml")))
+            emptyNoteAPI.store()
+            val loadedEmptyNoteAPI = NoteAPI(YamlSerializer(File("notes.yaml")))
+            assertEquals(0,loadedEmptyNoteAPI.numberOfNotes())
+            assertEquals(emptyNoteAPI.numberOfNotes(),loadedEmptyNoteAPI.numberOfNotes())
+        }
+
+        @Test
+        fun `saving then loading notes does not lose data`(){
+            //new note api and adding 3 notes to it
+            val noteAPIToSave = NoteAPI(YamlSerializer(File("notes.yaml")))
+            noteAPIToSave.add(learnKotlin!!)
+            noteAPIToSave.add(summerHoliday!!)
+            noteAPIToSave.add(codeApp!!)
+            //saving this noteAPI with the 3 notes inside
+            noteAPIToSave.store()
+            //creating new instance of note api
+            val noteAPIToLoad = NoteAPI(YamlSerializer(File("notes.yaml")))
+            //loading the old save from original instance to this noteAPI
+            noteAPIToLoad.load()
+            //checking are all notes present and equal
+            assertEquals(noteAPIToSave.numberOfNotes(),noteAPIToLoad.numberOfNotes())
+            assertEquals(noteAPIToSave.findNote(0),noteAPIToLoad.findNote(0))
+            assertEquals(noteAPIToSave.findNote(1),noteAPIToSave.findNote(1))
+            assertEquals(noteAPIToSave.findNote(2),noteAPIToLoad.findNote(2))
+        }
+
     }
 
     @Nested
-    inner class ArchivingNotes{
+    inner class ArchivingNotes {
 
         @Test
-        fun `trying to archive a note when theres no notes in system returns -999`(){
-            assertEquals(-999,emptyNotes!!.archiveNote(0))
+        fun `trying to archive a note when theres no notes in system returns -999`() {
+            assertEquals(-999, emptyNotes!!.archiveNote(0))
         }
 
         @Test
-        fun `trying to archive a note in a populated list but with a invalid index returns -999`(){
-            assertEquals(-999,populatedNotes!!.archiveNote(5))
+        fun `trying to archive a note in a populated list but with a invalid index returns -999`() {
+            assertEquals(-999, populatedNotes!!.archiveNote(5))
         }
 
         @Test
-        fun `archiving an active note archives that note and archiving a note that is archived returns -1`(){
+        fun `archiving an active note archives that note and archiving a note that is archived returns -1`() {
             assertFalse(populatedNotes!!.findNote(0)!!.isNoteArchived)
             populatedNotes!!.archiveNote(0)
             assertTrue(populatedNotes!!.findNote(0)!!.isNoteArchived)
-            assertEquals(-1,populatedNotes!!.archiveNote(0))
+            assertEquals(-1, populatedNotes!!.archiveNote(0))
         }
     }
 
