@@ -13,9 +13,7 @@ class NoteAPI(serializerType: Serializer) {
         return notes.add(note)
     }
 
-    fun numberOfNotes(): Int {
-        return notes.size
-    }
+    fun numberOfNotes() = notes.size
 
     fun findNote(index: Int): Note? {
         return if (Utils.isValidIndex(index, notes)) {
@@ -86,22 +84,22 @@ class NoteAPI(serializerType: Serializer) {
                     str += "${notes.indexOf(note)}: $note\n"
                 }
             }
-            str }
-        else return "No archived notes stored"
+            str
+        } else return "No archived notes stored"
     }
 
-    private fun numberOfArchivedNotes(): Int {
-        return notes.size - numberOfActiveNotes()
-    }
+    fun numberOfArchivedNotes() = notes.size - numberOfActiveNotes()
 
-    private fun numberOfActiveNotes(): Int {
-        var numOfActiveNotes = 0
-        for (note in notes) {
-            if (!note.isNoteArchived) {
-                numOfActiveNotes++
-            }
-        }
-        return numOfActiveNotes
+
+    fun numberOfActiveNotes(): Int {
+//        var numOfActiveNotes = 0
+//        for (note in notes) {
+//            if (!note.isNoteArchived) {
+//                numOfActiveNotes++
+//            }
+//        }
+//        return numOfActiveNotes
+        return notes.stream().filter { note: Note -> !note.isNoteArchived }.count().toInt()
     }
 
     fun archiveNote(index: Int) =
@@ -130,7 +128,7 @@ class NoteAPI(serializerType: Serializer) {
         } else "No notes stored"
 
 
-    private fun numberOfNotesByPriority(): HashMap<Int, Int> {
+    fun numberOfNotesByPriority(): HashMap<Int, Int> {
 
         val mapToReturn = HashMap<Int, Int>()
         mapToReturn[1] = 0
@@ -149,8 +147,7 @@ class NoteAPI(serializerType: Serializer) {
         }
         return mapToReturn
     }
-
-    fun mapOfNotesByPriority() = numberOfNotesByPriority()
+    
 
 
 }
