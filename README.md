@@ -26,5 +26,3 @@ NOTE MENU
 20) Save notes
 21) Load notes
 0) Exit
-
-Check out the [Notes App GitHub repository](https://github.com/ConorCoker/notes-app) for more information.
