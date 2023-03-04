@@ -25,11 +25,11 @@ class NoteAPITest {
 
     @BeforeEach
     fun setup() {
-        learnKotlin = Note("Learning Kotlin", 5, "College", false)
-        summerHoliday = Note("Summer Holiday to France", 1, "Holiday", false)
-        codeApp = Note("Code App", 4, "Work", false)
-        testApp = Note("Test App", 4, "Work", false)
-        swim = Note("Swim - Pool", 3, "Hobby", false)
+        learnKotlin = Note("Learning Kotlin", 5, "College", false,"todo")
+        summerHoliday = Note("Summer Holiday to France", 1, "Holiday", false,"todo")
+        codeApp = Note("Code App", 4, "Work", false,"todo")
+        testApp = Note("Test App", 4, "Work", false,"todo")
+        swim = Note("Swim - Pool", 3, "Hobby", false,"todo")
 
         //adding 5 models.models.models.Note to the notes api
         populatedNotes!!.add(learnKotlin!!)
@@ -54,7 +54,7 @@ class NoteAPITest {
     inner class AddNotes {
         @Test
         fun `adding a Note to a populated list adds to ArrayList`() {
-            val newNote = Note("Study Lambdas", 1, "College", false)
+            val newNote = Note("Study Lambdas", 1, "College", false,"todo")
             assertEquals(5, populatedNotes!!.numberOfNotes())
             assertTrue(populatedNotes!!.add(newNote))
             assertEquals(6, populatedNotes!!.numberOfNotes())
@@ -63,7 +63,7 @@ class NoteAPITest {
 
         @Test
         fun `adding a Note to an empty list adds to ArrayList`() {
-            val newNote = Note("Study Lambdas", 1, "College", false)
+            val newNote = Note("Study Lambdas", 1, "College", false,"todo")
             assertEquals(0, emptyNotes!!.numberOfNotes())
             assertTrue(emptyNotes!!.add(newNote))
             assertEquals(1, emptyNotes!!.numberOfNotes())
@@ -82,7 +82,7 @@ class NoteAPITest {
 
         @Test
         fun `list all archived notes returns archived notes when archived notes are present in collection`() {
-            populatedNotes!!.add(Note("Archived note", 1, "Archived", true))
+            populatedNotes!!.add(Note("Archived note", 1, "Archived", true,"todo"))
             assertTrue(populatedNotes!!.listArchivedNotes().contains("Archived note"))
         }
 
@@ -150,9 +150,9 @@ class NoteAPITest {
 
         @Test
         fun `updating a note that does not exist returns false`() {
-            assertFalse(emptyNotes!!.updateNote(0, Note("Updated models.models.models.Note", 1, "work", false)))
-            assertFalse(populatedNotes!!.updateNote(6, Note("Updated models.models.models.Note", 1, "work", false)))
-            assertFalse(populatedNotes!!.updateNote(-1, Note("Updated models.models.models.Note", 1, "work", false)))
+            assertFalse(emptyNotes!!.updateNote(0, Note("Updated models.models.models.Note", 1, "work", false,"todo")))
+            assertFalse(populatedNotes!!.updateNote(6, Note("Updated models.models.models.Note", 1, "work", false,"todo")))
+            assertFalse(populatedNotes!!.updateNote(-1, Note("Updated models.models.models.Note", 1, "work", false,"todo")))
         }
 
         @Test
@@ -165,7 +165,7 @@ class NoteAPITest {
             assertTrue(!populatedNotes!!.findNote(4)!!.isNoteArchived)
 
 
-            assertTrue(populatedNotes!!.updateNote(4, Note("Updating models.models.models.Note", 2, "College", true)))
+            assertTrue(populatedNotes!!.updateNote(4, Note("Updating models.models.models.Note", 2, "College", true,"todo")))
             assertEquals("Updating models.models.models.Note", populatedNotes!!.findNote(4)!!.noteTitle)
             assertEquals(2, populatedNotes!!.findNote(4)!!.notePriority)
             assertEquals("College", populatedNotes!!.findNote(4)!!.noteCategory)

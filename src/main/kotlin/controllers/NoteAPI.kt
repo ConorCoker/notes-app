@@ -53,6 +53,7 @@ class NoteAPI(serializerType: Serializer) {
             findNote(indexToUpdate)!!.notePriority = note.notePriority
             findNote(indexToUpdate)!!.noteCategory = note.noteCategory
             findNote(indexToUpdate)!!.isNoteArchived = note.isNoteArchived
+            findNote(indexToUpdate)!!.noteStatus = note.noteStatus
             true
         } else false
     }
@@ -173,9 +174,6 @@ class NoteAPI(serializerType: Serializer) {
         notesToFormat
             .joinToString (separator = "\n") { note ->
                 notes.indexOf(note).toString() + ": " + note.toString() }
-
-
-
 }
 
 

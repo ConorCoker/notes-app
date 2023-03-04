@@ -5,6 +5,7 @@ import persistance.YamlSerializer
 import utils.ScannerInput
 import utils.ScannerInput.readNextInt
 import utils.ScannerInput.readNextLine
+import utils.Utils
 import java.io.File
 
 
@@ -142,18 +143,32 @@ private fun archiveNote() {
 }
 
 private fun updateNote() {
-
     if (noteAPI.numberOfNotes() > 0) {
         listNotes()
-        if (noteAPI.updateNote(
-                readNextInt("Please enter index of models.models.models.Note you wish to update: "),
-                createNote()
-            )
-        ) {
-            println("Update Successful")
-        } else println("Update Failed")
-
-    } else println("models.models.models.Note notes to delete!")
+        val index = readNextInt("Please enter index of note you wish to update")
+        val status = readNextLine("Enter updated status for this note (todo/doing/done): ")
+        if (Utils.isValidStatus(status)) {
+            if (noteAPI.updateNote(
+                    index,
+                    Note(
+                        readNextLine("Please enter updated title: "),
+                        readNextInt("Please enter updated note priority (1-5): "),
+                        "Please enter updated note category: ",
+                        noteAPI.findNote(index)!!.isNoteArchived,
+                        status
+                    )
+                )
+            ) {
+                println("Update Successful")
+            } else {
+                println("Update Failed")
+            }
+        } else {
+            println("$status is not a valid status! please try again!")
+        }
+    } else {
+        println("No notes to delete!")
+    }
 }
 
 private fun listNotes() = println(noteAPI.listAllNotes())
@@ -170,10 +185,10 @@ private fun createNote(): Note {
         readNextLine("Please enter note title: "),
         readNextInt("Please enter note priority (1-5): "),
         readNextLine("Please enter note category: "),
-        false
+        false,
+        "todo"
     )
 }
-
 
 private fun displayMenuAndReturnInput(): Int {
     return readNextInt(
