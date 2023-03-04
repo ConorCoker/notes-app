@@ -145,7 +145,7 @@ private fun archiveNote() {
 private fun updateNote() {
     if (noteAPI.numberOfNotes() > 0) {
         listNotes()
-        val index = readNextInt("Please enter index of note you wish to update")
+        val index = readNextInt("Please enter index of note you wish to update: ")
         val status = readNextLine("Enter updated status for this note (todo/doing/done): ")
         if (Utils.isValidStatus(status)) {
             if (noteAPI.updateNote(
@@ -204,7 +204,7 @@ private fun displayMenuAndReturnInput(): Int {
          > |      c) List archived notes              |            
          > |      d) List number of notes by priority |
          > |      e) List notes of a specific priority|
-         > |   3) Update a note                       |
+         > |   3) Update a note (note status etc)     |
          > |   4) Delete a note                       |
          > |   5) Archive a note                      |
          > |   6) Search for a note by title          |

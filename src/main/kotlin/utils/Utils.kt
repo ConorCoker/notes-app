@@ -11,5 +11,9 @@ object Utils {
     fun isValidStatus(status: String) =
         status.lowercase() == "todo" || status.lowercase() == "done" || status.lowercase() == "doing"
 
+    fun isValidCategory(category:String){
+        //todo
+    }
+
 
 }
