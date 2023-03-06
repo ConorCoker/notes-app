@@ -26,7 +26,7 @@ private fun runMenu() {
         when (displayMenuAndReturnInput()) {
             1 -> addNote()
             2 -> runSubMenu()
-            3 -> updateNote()
+            3 -> updateNoteStatus()
             4 -> deleteNote()
             5 -> archiveNote()
             6 -> searchForNoteByTitle()
@@ -130,46 +130,52 @@ private fun deleteNote() {
 }
 
 private fun archiveNote() {
-
     if (noteAPI.numberOfNotes() > 0) {
-        println(listActiveNotes())
-        when (noteAPI.archiveNote(readNextInt("Please enter index of note you wish to archive: "))) {
-            -999 -> println("That is not a valid index!")
-            -1 -> println("That index exists but is already archived!")
-            1 -> println("models.models.models.Note successfully archived!")
-        }
-    } else println("There is no notes for you to archive!")
-
-}
-
-private fun updateNote() {
-    if (noteAPI.numberOfNotes() > 0) {
-        listNotes()
-        val index = readNextInt("Please enter index of note you wish to update: ")
-        val status = readNextLine("Enter updated status for this note (todo/doing/done): ")
-        if (Utils.isValidStatus(status)) {
-            if (noteAPI.updateNote(
-                    index,
-                    Note(
-                        readNextLine("Please enter updated title: "),
-                        readNextInt("Please enter updated note priority (1-5): "),
-                        "Please enter updated note category: ",
-                        noteAPI.findNote(index)!!.isNoteArchived,
-                        status
-                    )
-                )
-            ) {
-                println("Update Successful")
-            } else {
-                println("Update Failed")
-            }
-        } else {
-            println("$status is not a valid status! please try again!")
+        listActiveNotes()
+        val index = readNextInt("Please enter index of note you wish to archive: ")
+        when (noteAPI.archiveNote(index)) {
+            1 -> println("Note $index has been archived!")
+            -1 -> println("Note $index is already archived!")
+            -999 -> println("Invalid index. Note could not be archived.")
         }
     } else {
-        println("No notes to delete!")
+        println("There are no notes for you to archive!")
+    }
+
+}
+
+private fun updateNoteStatus() {
+
+    if (noteAPI.numberOfNotes() > 0) {
+        listNotes()
+        when (noteAPI.updateNote(
+            readNextInt("Please enter index of note you want to update the status of: "),
+            readNextLine("Please enter status of note you wish to update: (todo) (doing) (done) ")
+        )) {
+            1 -> {
+                println("Note status updated!")
+            }
+
+            -1 -> {
+                println("Status not valid please try again!")
+                updateNoteStatus()
+            };
+            0 -> {
+                println("Index is not valid! Please try again")
+                updateNoteStatus()
+            }
+
+            else -> {
+                println("Something went wrong!")
+            }
+        }
+
+
+    } else {
+        println("There are no notes in the system for you to update!")
     }
 }
+
 
 private fun listNotes() = println(noteAPI.listAllNotes())
 private fun addNote() {
@@ -181,13 +187,17 @@ private fun addNote() {
 }
 
 private fun createNote(): Note {
-    return Note(
-        readNextLine("Please enter note title: "),
-        readNextInt("Please enter note priority (1-5): "),
-        readNextLine("Please enter note category: "),
-        false,
-        "todo"
-    )
+
+    val title = readNextLine("Please enter note title (e.g. go shopping): ")
+    var priority = 0
+    do {
+        priority = readNextInt("Please enter note priority (1-5): ")
+    } while (!Utils.isValidPriority(priority))
+    var category = ""
+    do {
+        category = readNextLine("Please enter note category (work) (school) (personal) (home): ")
+    } while (!Utils.isValidCategory(category))
+    return Note(title, priority, category)
 }
 
 private fun displayMenuAndReturnInput(): Int {
@@ -204,7 +214,7 @@ private fun displayMenuAndReturnInput(): Int {
          > |      c) List archived notes              |            
          > |      d) List number of notes by priority |
          > |      e) List notes of a specific priority|
-         > |   3) Update a note (note status etc)     |
+         > |   3) Update note status                  |
          > |   4) Delete a note                       |
          > |   5) Archive a note                      |
          > |   6) Search for a note by title          |

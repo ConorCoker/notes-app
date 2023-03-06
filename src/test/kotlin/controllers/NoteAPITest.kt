@@ -147,7 +147,6 @@ class NoteAPITest {
 
     @Nested
     inner class UpdatingNotes {
-
         @Test
         fun `updating a note that does not exist returns false`() {
             assertFalse(emptyNotes!!.updateNote(0, Note("Updated models.models.models.Note", 1, "work", false, "todo")))
