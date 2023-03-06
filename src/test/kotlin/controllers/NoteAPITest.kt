@@ -12,6 +12,7 @@ import persistance.XMLSerializer
 import java.io.File
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNull
 
 class NoteAPITest {
 
@@ -25,11 +26,11 @@ class NoteAPITest {
 
     @BeforeEach
     fun setup() {
-        learnKotlin = Note("Learning Kotlin", 5, "College", false, "todo")
-        summerHoliday = Note("Summer Holiday to France", 1, "Holiday", false, "todo")
-        codeApp = Note("Code App", 4, "Work", false, "todo")
-        testApp = Note("Test App", 4, "Work", false, "todo")
-        swim = Note("Swim - Pool", 3, "Hobby", false, "todo")
+        learnKotlin = Note("Learning Kotlin", 5, "College")
+        summerHoliday = Note("Summer Holiday to France", 1, "Holiday")
+        codeApp = Note("Code App", 4, "Work")
+        testApp = Note("Test App", 4, "Work")
+        swim = Note("Swim - Pool", 3, "Hobby")
 
         //adding 5 models.models.models.Note to the notes api
         populatedNotes!!.add(learnKotlin!!)
@@ -54,7 +55,7 @@ class NoteAPITest {
     inner class AddNotes {
         @Test
         fun `adding a Note to a populated list adds to ArrayList`() {
-            val newNote = Note("Study Lambdas", 1, "College", false, "todo")
+            val newNote = Note("Study Lambdas", 1, "College")
             assertEquals(5, populatedNotes!!.numberOfNotes())
             assertTrue(populatedNotes!!.add(newNote))
             assertEquals(6, populatedNotes!!.numberOfNotes())
@@ -63,7 +64,7 @@ class NoteAPITest {
 
         @Test
         fun `adding a Note to an empty list adds to ArrayList`() {
-            val newNote = Note("Study Lambdas", 1, "College", false, "todo")
+            val newNote = Note("Study Lambdas", 1, "College")
             assertEquals(0, emptyNotes!!.numberOfNotes())
             assertTrue(emptyNotes!!.add(newNote))
             assertEquals(1, emptyNotes!!.numberOfNotes())
@@ -148,45 +149,29 @@ class NoteAPITest {
     @Nested
     inner class UpdatingNotes {
         @Test
-        fun `updating a note that does not exist returns false`() {
-            assertFalse(emptyNotes!!.updateNote(0, Note("Updated models.models.models.Note", 1, "work", false, "todo")))
-            assertFalse(
-                populatedNotes!!.updateNote(
-                    6,
-                    Note("Updated models.models.models.Note", 1, "work", false, "todo")
-                )
-            )
-            assertFalse(
-                populatedNotes!!.updateNote(
-                    -1,
-                    Note("Updated models.models.models.Note", 1, "work", false, "todo")
-                )
-            )
+        fun `updating note status of a index that does not exist returns 0`() {
+            assertNull(emptyNotes!!.findNote(0))
+            assertEquals(0,emptyNotes!!.updateNote(0,"work"))
         }
 
         @Test
-        fun `updating a note that exists updates that note and returns true`() {
+        fun `updating a note status that exists updates that note and returns 1`() {
 
             assertEquals(swim, populatedNotes!!.findNote(4))
-            assertEquals("Swim - Pool", populatedNotes!!.findNote(4)!!.noteTitle)
-            assertEquals(3, populatedNotes!!.findNote(4)!!.notePriority)
-            assertEquals("Hobby", populatedNotes!!.findNote(4)!!.noteCategory)
-            assertTrue(!populatedNotes!!.findNote(4)!!.isNoteArchived)
+            //checking is the default status present
+            assertEquals("todo", populatedNotes!!.findNote(4)!!.status)
+            //updating the note with a valid status
+            assertEquals(1,populatedNotes!!.updateNote(4,"doing"))
+            //checking did update work
+            assertEquals("doing", populatedNotes!!.findNote(4)!!.status)
+        }
 
-
-            assertTrue(
-                populatedNotes!!.updateNote(
-                    4,
-                    Note("Updating models.models.models.Note", 2, "College", true, "done")
-                )
-            )
-            assertEquals("Updating models.models.models.Note", populatedNotes!!.findNote(4)!!.noteTitle)
-            assertEquals(2, populatedNotes!!.findNote(4)!!.notePriority)
-            assertEquals("College", populatedNotes!!.findNote(4)!!.noteCategory)
-            assertTrue(populatedNotes!!.findNote(4)!!.isNoteArchived)
-            //checking is note status updated correctly
-            assertEquals(populatedNotes!!.findNote(4)!!.noteStatus, "done")
-
+        @Test
+        fun `updating a note with a invalid category does not change category and returns -1`(){
+            assertEquals(learnKotlin,populatedNotes!!.findNote(0))
+            assertEquals("todo",learnKotlin!!.status)
+            assertEquals(-1,populatedNotes!!.updateNote(0,"invalid status"))
+            assertTrue(learnKotlin!!.status=="todo")
         }
 
 
